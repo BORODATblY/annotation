@@ -1,4 +1,4 @@
-# python multi_obj.py --tracker csrt
+# python3 multi_obj_url.py --tracker csrt --video "url from youtube or download video"
 # sudo pip install opencv-contrib-python
 # pafy (pip install pafy)
 # youtube_dl (sudo pip install --upgrade youtube_dl)
@@ -46,10 +46,11 @@ try:
 	video = pafy.new(url)
 	play = video.getbest(preftype = "mp4")
 	vs = cv2.VideoCapture(play.url)
-
 	image_name = str(video.title)
-
 	folder_name = str(video.title)
+	filename = str(folder_name)
+
+
 except:
 	if not args.get("video", False):
 		print("[INFO] starting video stream...")
@@ -57,14 +58,16 @@ except:
 		time.sleep(1.0)
 
 
-	
 	#otherwise, grab a reference to the video file
 	else:
 		vs = cv2.VideoCapture(args["video"])
 
-	image_name = str(args["video"])
+	image = str(args["video"])
+	image_name = image [:-4]
+	folder_name = image_name
 
-	folder_name = image_name[:-4]
+# print (image_name)
+#print (folder_name)
 
 def getFrame(frame_nr):
     #frame_nr = video.length
@@ -99,7 +102,6 @@ playSpeed = 16
 
 # get write FPS
 FPS = 10
-
 
 # add trackbar
 cv2.namedWindow("Frame")
@@ -150,7 +152,7 @@ while True:
 				# if you have old name:
 				# cv2.imwrite("./save/hand" + str(image_num) + ".jpg", crop_img)
 				
-				cv2.imwrite("./"+ folder_name + "/" + image_name[:-4] + "_" + str(image_num) + ".jpg", crop_img)
+				cv2.imwrite("./"+ str(folder_name) + "/" + image_name + "_" + str(image_num) + ".jpg", crop_img)
 				print (image_num)
 
 			image_num+=1
@@ -192,6 +194,16 @@ while True:
 	except:
 		print("err")
 
+
+answer = str(input("Download video? [Y/N] "))
+print (answer)
+if answer == "y" or answer == "Y" :
+	filename = play.download(filepath="./"+ str(folder_name) + "/")
+	print ("Dowload video :" + filename)
+elif answer == "n" or answer == "N":
+	print ("Video not download...")
+else:
+	print ("Video not found....")
 # if we are using a webcam, release the pointer
 if not args.get("video", False):
 	vs.stop()
