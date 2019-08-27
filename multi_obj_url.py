@@ -49,6 +49,7 @@ try:
 	image_name = str(video.title)
 	folder_name = str(video.title)
 	filename = str(folder_name)
+	download = 1
 
 
 except:
@@ -65,6 +66,7 @@ except:
 	image = str(args["video"])
 	image_name = image [:-4]
 	folder_name = image_name
+	download = 0
 
 # print (image_name)
 #print (folder_name)
@@ -194,16 +196,18 @@ while True:
 	except:
 		print("err")
 
-
-answer = str(input("Download video? [Y/N] "))
-print (answer)
-if answer == "y" or answer == "Y" :
-	filename = play.download(filepath="./"+ str(folder_name) + "/")
-	print ("Dowload video :" + filename)
-elif answer == "n" or answer == "N":
-	print ("Video not download...")
+if download == 1:
+	answer = str(input("Download video? [Y/N] "))
+	print (answer)
+	if answer == "y" or answer == "Y" :
+		filename = play.download(filepath="./"+ str(folder_name) + "/")
+		print ("Dowload video :" + filename)
+	elif answer == "n" or answer == "N":
+		print ("Video not download...")
+	else:
+		print ("Video not found....")
 else:
-	print ("Video not found....")
+	None
 # if we are using a webcam, release the pointer
 if not args.get("video", False):
 	vs.stop()
