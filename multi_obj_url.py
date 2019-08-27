@@ -195,10 +195,10 @@ while True:
 			break
 	except:
 		print("err")
-
+# 
 if download == 1:
 	answer = str(input("Download video? [Y/N] "))
-	print (answer)
+	#print (answer)
 	if answer == "y" or answer == "Y" :
 		filename = play.download(filepath="./"+ str(folder_name) + "/")
 		print ("Dowload video :" + filename)
