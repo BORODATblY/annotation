@@ -12,6 +12,7 @@ import cv2
 import os
 import numpy as np
 import pafy
+import re
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -47,7 +48,10 @@ try:
 	play = video.getbest(preftype = "mp4")
 	vs = cv2.VideoCapture(play.url)
 	image_name = str(video.title)
+	image_name = image_name.replace("/", " ")
+
 	folder_name = str(video.title)
+	folder_name = folder_name.replace("/", " ")
 	filename = str(folder_name)
 	download = 1
 
@@ -82,12 +86,18 @@ def setSpeed(val):
 def setFPS(val):
 	global FPS
 	FPS = max(val, 1)
+
 try:
     if not os.path.exists(folder_name): 
     	# os.path.exists('save'):
     	# strftime("%Y%m%d", gmtime()) add data to name folder
         os.makedirs(folder_name) 
-        # os.makedirs('save') 
+        # create folder up, down, left, right
+        os.makedirs("./" + folder_name + "/" + "up")
+        os.makedirs("./" + folder_name + "/" + "down")
+        os.makedirs("./" + folder_name + "/" + "left")
+        os.makedirs("./" + folder_name + "/" + "right")
+        #os.makedirs("./" + folder_name + "/" + "screenshots")
         # strftime("%Y%m%d", gmtime()) create save + date folder
 except OSError:
     print ('Error: Creating directory of save')
@@ -98,6 +108,8 @@ nr_of_frames = int(vs.get(cv2.CAP_PROP_FRAME_COUNT))
 
 # loop over frames from the video stream
 image_num = 0
+
+
 # get total number of frames
 # set wait for each frame, determines playbackspeed
 playSpeed = 16
@@ -127,7 +139,7 @@ while True:
 			break
 
 		# resize the frame (so we can process it faster)
-		frame = imutils.resize(frame, width = 1200)
+		frame = imutils.resize(frame, width = 1300)
 
 		# grab the updated bounding box coordinates (if any) for each
 		# object that is being tracked
@@ -156,7 +168,7 @@ while True:
 				
 				cv2.imwrite("./"+ str(folder_name) + "/" + image_name + "_" + str(image_num) + ".jpg", crop_img)
 				print (image_num)
-
+				
 			image_num+=1
 
 			cv2.rectangle(frame, (x-1, y-1), (x + w +2, y + h +2), (0, 255, 0), 1)
@@ -189,7 +201,6 @@ while True:
 
 		if key == ord("c"):
 			trackers = cv2.MultiTracker_create()
-		
 		# if the `q` key was pressed, break from the loop
 		elif key == ord("q"):
 			break
