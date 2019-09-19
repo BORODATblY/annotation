@@ -98,7 +98,7 @@ while True:
 
 		# show the output frame
 		cv2.imshow("Frame", frame)
-		key = cv2.waitKey(100) & 0xFF #5
+		key = cv2.waitKey(5) & 0xFF #5
 
 		# if the 's' key is selected, we are going to "select" a bounding
 		# box to track

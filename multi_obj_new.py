@@ -1,6 +1,6 @@
-#python multi_obj.py --tracker csrt
-#sudo pip install opencv-contrib-python
-
+# python multi_obj.py --tracker csrt
+# sudo pip install opencv-contrib-python
+# 
 
 # import the necessary packages
 from imutils.video import VideoStream
@@ -68,20 +68,21 @@ try:
     	# strftime("%Y%m%d", gmtime()) add data to name folder
         os.makedirs(folder_name) 
         # os.makedirs('save') 
-        # strftime("%Y%m%d", gmtime()) create same + date folder
+        # strftime("%Y%m%d", gmtime()) create save + date folder
 except OSError:
     print ('Error: Creating directory of save')
+
+nr_of_frames = int(vs.get(cv2.CAP_PROP_FRAME_COUNT)) 
 
 
 # loop over frames from the video stream
 image_num = 0
 # get total number of frames
-nr_of_frames = int(vs.get(cv2.CAP_PROP_FRAME_COUNT))
 # set wait for each frame, determines playbackspeed
 playSpeed = 16
 
 # get write FPS
-FPS = 5
+FPS = 10
 
 
 # add trackbar
@@ -106,14 +107,15 @@ while True:
 			break
 
 		# resize the frame (so we can process it faster)
-		frame = imutils.resize(frame, width = 1400)
+		frame = imutils.resize(frame, width = 1200)
 
 		# grab the updated bounding box coordinates (if any) for each
 		# object that is being tracked
 		(success, boxes) = trackers.update(frame)
-		
+		cv2.imshow("Frame", frame)
 		# loop over the bounding boxes and draw then on the frame
 		for box in boxes:
+			
 			(x, y, w, h) = [int(v) for v in box]
 
 			if(h>w):
@@ -133,15 +135,20 @@ while True:
 				# cv2.imwrite("./save/hand" + str(image_num) + ".jpg", crop_img)
 				
 				cv2.imwrite("./"+ folder_name + "/" + image_name[:-4] + "_" + str(image_num) + ".jpg", crop_img)
-			
+				print (image_num)
+
 			image_num+=1
 
 			cv2.rectangle(frame, (x-1, y-1), (x + w +2, y + h +2), (0, 255, 0), 1)
 		
 			# show the output frame
+		
+		
 		cv2.imshow("Frame", frame)
+
 		# pos in life frame
-		pos = vs.get(cv2.CAP_PROP_POS_FRAMES)
+		pos = vs.get(cv2.CAP_PROP_POS_MSEC)
+
 		
 		cv2.setTrackbarPos("Frame","Frame", int(pos))
 		
